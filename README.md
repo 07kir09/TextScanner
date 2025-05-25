@@ -1,9 +1,5 @@
 # AntiPlagiarism — микросервисная платформа для обнаружения сходства текстов
 
-![CI](https://img.shields.io/badge/build-passing-brightgreen) ![Docker](https://img.shields.io/badge/Docker-ready-blue)
-
-Лёгкая горизонтально масштабируемая backend‑система для хранения документов и поиска заимствований. Написана на **.NET 9** и поставляется в виде набора Docker‑контейнеров.
-
 ---
 
 ## Оглавление
