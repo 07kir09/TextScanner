@@ -13,10 +13,7 @@
 7. [API](#api)
 8. [Процесс разработки](#процесс-разработки)
 9. [Тестирование](#тестирование)
-10. [CI и CD](#ci-и-cd)
-11. [FAQ и устранение неполадок](#faq-и-устранение-неполадок)
-12. [Как внести вклад](#как-внести-вклад)
-13. [Лицензия](#лицензия)
+10. [FAQ и устранение неполадок](#faq-и-устранение-неполадок)
 
 ---
 
@@ -155,15 +152,6 @@ AntiPlagiarism/
 * **Интеграционные** — поднимают TestContainers (PostgreSQL) и вызывают gRPC/HTTP пайплайны.
 * **Статический анализ** — Roslyn Analyzers, сборка падает при уровне ≥ `Warning`.
 
----
-
-## CI и CD
-
-* **GitHub Actions** (см. `.github/workflows/ci.yml`):
-
-  * Restore → Build → Test → Docker Build → Push в GH CR.
-* **Образы** — в Docker Hub / GHCR c тегами `latest` и `vX.Y.Z`.
-* **Деплой** — Helm‑чарт в `/deploy/helm` (Kubernetes ≥ 1.27).
 
 ---
 
@@ -175,21 +163,3 @@ AntiPlagiarism/
 | `pg_isready: no response`      | БД ещё поднимается          | Подождите 10 с или смотрите логи `docker compose logs postgres`. |
 | Ошибка сборки на Apple Silicon | образы amd64 по умолчанию   | Добавьте `platform: linux/arm64`.                                |
 | Долгая первая сборка           | .NET 9 \~400 МБ             | После кэширования быстрее; можно pre‑build в CI.                 |
-
----
-
-## Как внести вклад
-
-1. Сделайте форк репозитория.
-2. Создайте ветку: `git checkout -b feat/my-feature`.
-3. Закоммитьте изменения: `git commit -m 'feat: добавил…'`.
-4. Запушьте ветку: `git push origin feat/my-feature`.
-5. Откройте Pull Request.
-
-Все коммиты должны проходить `dotnet test` и `dotnet format`.
-
----
-
-## Лицензия
-
-Распространяется под лицензией **MIT**. См. файл `LICENSE`.
