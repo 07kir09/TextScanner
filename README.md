@@ -1,90 +1,89 @@
-# AntiPlagiarism — Micro‑Service Platform for Similarity Detection
+# AntiPlagiarism — микросервисная платформа для обнаружения сходства текстов
 
 ![CI](https://img.shields.io/badge/build-passing-brightgreen) ![Docker](https://img.shields.io/badge/Docker-ready-blue)
 
-A lightweight, horizontally‑scalable backend for storing documents and detecting near‑duplicate text fragments.  Written in **.NET 9** and shipped as a set of Docker containers.
+Лёгкая горизонтально масштабируемая backend‑система для хранения документов и поиска заимствований. Написана на **.NET 9** и поставляется в виде набора Docker‑контейнеров.
 
 ---
 
-## Table of Contents
+## Оглавление
 
-1. [Key Features](#key-features)
-2. [Architecture](#architecture)
-3. [Prerequisites](#prerequisites)
-4. [Quick Start](#quick-start)
-5. [Project Structure](#project-structure)
-6. [Configuration](#configuration)
-7. [API Reference](#api-reference)
-8. [Development Workflow](#development-workflow)
-9. [Testing](#testing)
-10. [CI & CD](#ci--cd)
-11. [Troubleshooting & FAQ](#troubleshooting--faq)
-12. [Contributing](#contributing)
-13. [License](#license)
-
----
-
-## Key Features
-
-* **Document Storage** — fast upload & retrieval backed by PostgreSQL Large Objects.
-* **Similarity Analysis** — tokenises text, generates min‑hash fingerprints and produces a detailed plagiarism report.
-* **API Gateway** — single entry point with automatic Swagger docs & request tracing.
-* **Stateless Services** — every component can be scaled out independently.
-* **Zero‑setup local run** — one command (`docker compose up -d`) and you are ready to call the API.
+1. [Ключевые возможности](#ключевые-возможности)
+2. [Архитектура](#архитектура)
+3. [Необходимое ПО](#необходимое-по)
+4. [Быстрый старт](#быстрый-старт)
+5. [Структура проекта](#структура-проекта)
+6. [Конфигурация](#конфигурация)
+7. [API](#api)
+8. [Процесс разработки](#процесс-разработки)
+9. [Тестирование](#тестирование)
+10. [CI и CD](#ci-и-cd)
+11. [FAQ и устранение неполадок](#faq-и-устранение-неполадок)
+12. [Как внести вклад](#как-внести-вклад)
+13. [Лицензия](#лицензия)
 
 ---
 
-## Architecture
+## Ключевые возможности
+
+* **Хранение документов** — быстрая загрузка и получение файлов на базе PostgreSQL Large Objects.
+* **Анализ сходства** — токенизация текста, MinHash‑отпечатки и подробный отчёт о плагиате.
+* **API‑шлюз** — единая точка входа с Swagger‑доками и трассировкой запросов.
+* **Бессостояние сервисов** — каждый компонент масштабируется независимо.
+* **Zero‑setup локальный запуск** — одна команда `docker compose up -d` и сервис готов.
+
+---
+
+## Архитектура
 
 ```text
 ┌────────────┐  HTTP  ┌────────────────────┐     gRPC      ┌────────────────────────┐
-│  Client /  │ ─────► │  API Gateway (80)  │ ────────────► │  File Storing Service  │
-│  Frontend  │        │      ASP.NET       │              │  • Upload              │
-└────────────┘        │  • Routing         │              │  • Download            │
-                      │  • Auth placeholder│              └────────────────────────┘
-                      │  • Swagger UI      │
+│  Клиент /  │ ─────► │  API‑шлюз (80)     │ ────────────► │  Сервис хранения файлов │
+│  Frontend  │        │  ASP.NET           │              │  • Загрузка             │
+└────────────┘        │  • Маршрутизация   │              │  • Выдача               │
+                      │  • Swagger UI      │              └────────────────────────┘
                       │     ▲              │ gRPC         ┌────────────────────────┐
-                      └─────┼──────────────┘─────────────►│  File Analysis Service │
-                            │                               │  • Tokenisation        │
-                            │   Health‑check /metrics       │  • Shingle + MinHash   │
-                            ▼                               │  • Report              │
+                      └─────┼──────────────┘─────────────►│  Сервис анализа файлов  │
+                            │                               │  • Токенизация          │
+                            │   /health, /metrics           │  • MinHash              │
+                            ▼                               │  • Отчёт                │
                      ┌────────────────────┐                └────────────────────────┘
-                     │    PostgreSQL      │  DB schema
-                     │  (5432, single)    │  mounted volume
+                     │    PostgreSQL      │  Две схемы
+                     │   (5432, один)     │  томы Docker
                      └────────────────────┘
 ```
 
 ---
 
-## Prerequisites
+## Необходимое ПО
 
-| Tool                   | Version  | Why                                                             |
-| ---------------------- | -------- | --------------------------------------------------------------- |
-| **Docker Engine**      | ≥ 24.0   | Container runtime                                               |
-| **Docker Compose V2**  | ≥ 2.24   | Or `docker compose` plugin                                      |
-| **Git**                | latest   | Clone repo (optional)                                           |
-| **.NET SDK 9 Preview** | optional | Needed only for local debugging & unit tests outside containers |
+| Инструмент             | Версия    | Зачем                                                       |
+| ---------------------- | --------- | ----------------------------------------------------------- |
+| **Docker Engine**      | ≥ 24.0    | Запуск контейнеров                                          |
+| **Docker Compose V2**  | ≥ 2.24    | Плагин `docker compose`                                     |
+| **Git**                | последняя | Клонирование репо (опц.)                                    |
+| **.NET SDK 9 Preview** | опц.      | Нужен только для локальной отладки и юнит‑тестов вне Docker |
 
-> **Apple Silicon (M‑series)** — add `platform: linux/arm64` to every service in `docker‑compose.yml` or export `DOCKER_DEFAULT_PLATFORM=linux/arm64`.
+> **Apple Silicon (M‑серия).** Добавьте `platform: linux/arm64` в каждый сервис `docker-compose.yml` или экспортируйте `DOCKER_DEFAULT_PLATFORM=linux/arm64`.
 
 ---
 
-## Quick Start
+## Быстрый старт
 
 ```bash
-# 1. Clone & enter project
+# 1. Клонируем репозиторий
 $ git clone https://github.com/<user>/AntiPlagiarism.git
 $ cd AntiPlagiarism
 
-# 2. Spin up stack (build if images absent)
+# 2. Поднимаем стек (при необходимости строим образы)
 $ docker compose up -d --build
 
-# 3. Verify
-$ open http://localhost:8080/swagger/index.html   # macOS shortcut
+# 3. Проверяем
+$ open http://localhost:8080/swagger/index.html   # macOS
 $ curl -i http://localhost:8080/health            # 200 OK ✓
 ```
 
-To stop and wipe everything including volumes:
+Остановить и удалить тома:
 
 ```bash
 docker compose down -v
@@ -92,62 +91,60 @@ docker compose down -v
 
 ---
 
-## Project Structure
+## Структура проекта
 
 ```
 AntiPlagiarism/
-├── AntiPlagiarism.ApiGateway/         # Minimal Clean‑Architecture Web API
-├── AntiPlagiarism.FileStoringService/ # Stores raw files & meta
-├── AntiPlagiarism.FileAnalysisService/# Plagiarism detection engine
-├── AntiPlagiarism.Common/             # Shared models & proto contracts
-├── init-db/                           # SQL scripts for bootstrap
-├── docker-compose.yml                 # Local multi‑container dev stack
+├── AntiPlagiarism.ApiGateway/         # Минимальный Web API
+├── AntiPlagiarism.FileStoringService/ # Хранение файлов + метаданных
+├── AntiPlagiarism.FileAnalysisService/# Движок поиска плагиата
+├── AntiPlagiarism.Common/             # Общие модели и gRPC‑контракты
+├── init-db/                           # SQL для инициализации
+├── docker-compose.yml                 # Локальный стек
 └── README.md
 ```
 
 ---
 
-## Configuration
+## Конфигурация
 
-All runtime configuration is handled through **environment variables** (see `docker-compose.yml`).
+Все параметры передаются **переменными среды** (см. `docker-compose.yml`).
 
-| Variable                        | Service      | Default                                  | Description                     |
-| ------------------------------- | ------------ | ---------------------------------------- | ------------------------------- |
-| `POSTGRES_USER`                 | postgres     | `postgres`                               | DB superuser                    |
-| `POSTGRES_PASSWORD`             | postgres     | `postgres`                               | DB password                     |
-| `ConnectionStrings__StorageDb`  | FileStoring  | `Host=postgres;Database=file_storage;…`  | Storage schema                  |
-| `ConnectionStrings__AnalysisDb` | FileAnalysis | `Host=postgres;Database=file_analysis;…` | Analysis schema                 |
-| `Gateway__PublicOrigin`         | ApiGateway   | `http://localhost:8080`                  | Absolute URL for Swagger & CORS |
+| Переменная                      | Сервис       | Значение по умолчанию                    | Описание                     |
+| ------------------------------- | ------------ | ---------------------------------------- | ---------------------------- |
+| `POSTGRES_USER`                 | postgres     | `postgres`                               | Суперпользователь БД         |
+| `POSTGRES_PASSWORD`             | postgres     | `postgres`                               | Пароль БД                    |
+| `ConnectionStrings__StorageDb`  | FileStoring  | `Host=postgres;Database=file_storage;…`  | Схема хранения               |
+| `ConnectionStrings__AnalysisDb` | FileAnalysis | `Host=postgres;Database=file_analysis;…` | Схема анализа                |
+| `Gateway__PublicOrigin`         | ApiGateway   | `http://localhost:8080`                  | Базовый URL для Swagger/CORS |
 
-For local debugging outside Docker create `appsettings.Development.json` files or use the **.NET User Secrets** feature.
+Для локальной отладки вне Docker используйте `appsettings.Development.json` или **User Secrets**.
 
 ---
 
-## API Reference
-
-Each micro‑service exposes its own Swagger/Proto, proxied to a single UI:
+## API
 
 * **Swagger UI:** [`/swagger`](http://localhost:8080/swagger)
-* **Health check:** `GET /health` → `200 OK` / `503 Service Unavailable`
-* **Upload file:** `POST /storage/files` — multipart/form‑data (`file`) ⇒ `201 Created` + `fileId`
-* **Run analysis:** `POST /analysis/jobs` — JSON `{ sourceFileId, referenceIds[] }` ⇒ jobId
-* **Poll job result:** `GET /analysis/jobs/{id}` — `200 OK` + JSON report or `202 Accepted`
+* **Health‑check:** `GET /health` → `200 OK` / `503 Service Unavailable`
+* **Загрузка файла:** `POST /storage/files` — `multipart/form-data` (`file`) ⇒ `201 Created` + `fileId`
+* **Запуск анализа:** `POST /analysis/jobs` — JSON `{ sourceFileId, referenceIds[] }` ⇒ `jobId`
+* **Статус задачи:** `GET /analysis/jobs/{id}` — `200 OK` + отчёт или `202 Accepted`
 
-> Full request/response models are documented in Swagger and generated C# clients (`/src/Clients`).
+Полные модели запросов/ответов смотрите в Swagger или в сгенерированных C# клиентах (`/src/Clients`).
 
 ---
 
-## Development Workflow
+## Процесс разработки
 
-1. **IDE** — JetBrains Rider / VS Code + C# extension.
-2. `dotnet watch` — Hot reload each service:
+1. **IDE** — JetBrains Rider / VS Code с C#‑расширением.
+2. Горячая перезагрузка:
 
    ```bash
    cd AntiPlagiarism.ApiGateway
    dotnet watch run
    ```
-3. **Debug inside container** — use `docker compose -f docker-compose.debug.yml up` (exposes port 5678 for Rider).
-4. **Database migrations** — EF Core Code‑First:
+3. **Отладка в контейнере** — `docker compose -f docker-compose.debug.yml up` (порт 5678 для Rider).
+4. **Миграции БД** — EF Core Code‑First:
 
    ```bash
    dotnet ef migrations add Init --project AntiPlagiarism.FileStoringService
@@ -156,49 +153,47 @@ Each micro‑service exposes its own Swagger/Proto, proxied to a single UI:
 
 ---
 
-## Testing
+## Тестирование
 
-* **Unit tests** — `dotnet test AntiPlagiarism.sln` (xUnit + FluentAssertions)
-* **Integration tests** — spins up ephemeral TestContainers (PostgreSQL) and calls gRPC/HTTP pipelines.
-* **Static analysis** — Rider Code Inspection + Roslyn Analyzers, fails CI on severity ≥ `Warning`.
-
----
-
-## CI & CD
-
-* **GitHub Actions** (see `.github/workflows/ci.yml`):
-
-  * Restore → Build → Test → Docker Build → Push to GH CR.
-* **Docker Hub / GHCR** images tagged `latest` and `vX.Y.Z`.
-* **Deploy** — Helm chart in `/deploy/helm` (Kubernetes ≥ 1.27).
+* **Юнит‑тесты** — `dotnet test AntiPlagiarism.sln` (xUnit + FluentAssertions)
+* **Интеграционные** — поднимают TestContainers (PostgreSQL) и вызывают gRPC/HTTP пайплайны.
+* **Статический анализ** — Roslyn Analyzers, сборка падает при уровне ≥ `Warning`.
 
 ---
 
-## Troubleshooting & FAQ
+## CI и CD
 
-| Problem                    | Diagnosis                      | Fix                                                                     |
-| -------------------------- | ------------------------------ | ----------------------------------------------------------------------- |
-| `port 8080 already in use` | Another app occupies 8080      | Change left side of `ports:` mapping and re‑run `docker compose up -d`. |
-| `pg_isready: no response`  | DB not ready, services waiting | Wait 10 s or inspect DB logs with `docker compose logs postgres`.       |
-| Apple Silicon build fails  | amd64 images by default        | Add `platform: linux/arm64`.                                            |
-| Very slow first build      | .NET 9 images \~400 MB         | They are cached afterwards; use CI to pre‑build.                        |
+* **GitHub Actions** (см. `.github/workflows/ci.yml`):
 
----
-
-## Contributing
-
-Pull requests are welcome!  Please open an issue first to discuss what you would like to change.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feat/my-awesome-feature`)
-3. Commit your changes (`git commit -m 'feat: add amazing feature'`)
-4. Push to the branch (`git push origin feat/my-awesome-feature`)
-5. Open a Pull Request
-
-All commits must pass `dotnet test` and `dotnet format`.
+  * Restore → Build → Test → Docker Build → Push в GH CR.
+* **Образы** — в Docker Hub / GHCR c тегами `latest` и `vX.Y.Z`.
+* **Деплой** — Helm‑чарт в `/deploy/helm` (Kubernetes ≥ 1.27).
 
 ---
 
-## License
+## FAQ и устранение неполадок
 
-Distributed under the **MIT License**.  See `LICENSE` for more information.
+| Симптом                        | Диагностика                 | Решение                                                          |
+| ------------------------------ | --------------------------- | ---------------------------------------------------------------- |
+| `port 8080 already in use`     | Порт занят другим процессом | Измените левую часть `ports:` и перезапустите стек.              |
+| `pg_isready: no response`      | БД ещё поднимается          | Подождите 10 с или смотрите логи `docker compose logs postgres`. |
+| Ошибка сборки на Apple Silicon | образы amd64 по умолчанию   | Добавьте `platform: linux/arm64`.                                |
+| Долгая первая сборка           | .NET 9 \~400 МБ             | После кэширования быстрее; можно pre‑build в CI.                 |
+
+---
+
+## Как внести вклад
+
+1. Сделайте форк репозитория.
+2. Создайте ветку: `git checkout -b feat/my-feature`.
+3. Закоммитьте изменения: `git commit -m 'feat: добавил…'`.
+4. Запушьте ветку: `git push origin feat/my-feature`.
+5. Откройте Pull Request.
+
+Все коммиты должны проходить `dotnet test` и `dotnet format`.
+
+---
+
+## Лицензия
+
+Распространяется под лицензией **MIT**. См. файл `LICENSE`.
