@@ -1,86 +1,85 @@
-# AntiPlagiarism — микросервисная платформа для обнаружения сходства текстов
+# AntiPlagiarism — Платформа поиска текстовых заимствований
+
+Простая микросервисная система: загружаете документ — получаете статистику, отчёт о схожести и облако слов.
 
 ---
 
-## Оглавление
+## Что умеет система
 
-1. [Ключевые возможности](#ключевые-возможности)
-2. [Архитектура](#архитектура)
-3. [Необходимое ПО](#необходимое-по)
-4. [Быстрый старт](#быстрый-старт)
-5. [Структура проекта](#структура-проекта)
-6. [Конфигурация](#конфигурация)
-7. [API](#api)
-8. [Процесс разработки](#процесс-разработки)
-9. [Тестирование](#тестирование)
-10. [FAQ и устранение неполадок](#faq-и-устранение-неполадок)
-
----
-
-## Ключевые возможности
-
-* **Хранение документов** — быстрая загрузка и получение файлов на базе PostgreSQL Large Objects.
-* **Анализ сходства** — токенизация текста, MinHash‑отпечатки и подробный отчёт о плагиате.
-* **API‑шлюз** — единая точка входа с Swagger‑доками и трассировкой запросов.
-* **Бессостояние сервисов** — каждый компонент масштабируется независимо.
-* **Zero‑setup локальный запуск** — одна команда `docker compose up -d` и сервис готов.
-
----
-
-## Архитектура
-
-```text
-┌────────────┐  HTTP  ┌────────────────────┐     gRPC      ┌────────────────────────┐
-│  Клиент /  │ ─────► │  API‑шлюз (80)     │ ────────────► │  Сервис хранения файлов │
-│  Frontend  │        │  ASP.NET           │              │  • Загрузка             │
-└────────────┘        │  • Маршрутизация   │              │  • Выдача               │
-                      │  • Swagger UI      │              └────────────────────────┘
-                      │     ▲              │ gRPC         ┌────────────────────────┐
-                      └─────┼──────────────┘─────────────►│  Сервис анализа файлов  │
-                            │                               │  • Токенизация          │
-                            │   /health, /metrics           │  • MinHash              │
-                            ▼                               │  • Отчёт                │
-                     ┌────────────────────┐                └────────────────────────┘
-                     │    PostgreSQL      │  Две схемы
-                     │   (5432, один)     │  томы Docker
-                     └────────────────────┘
-```
-
----
-
-## Необходимое ПО
-
-| Инструмент             | Версия    | Зачем                                                       |
-| ---------------------- | --------- | ----------------------------------------------------------- |
-| **Docker Engine**      | ≥ 24.0    | Запуск контейнеров                                          |
-| **Docker Compose V2**  | ≥ 2.24    | Плагин `docker compose`                                     |
-| **Git**                | последняя | Клонирование репо (опц.)                                    |
-| **.NET SDK 9 Preview** | опц.      | Нужен только для локальной отладки и юнит‑тестов вне Docker |
-
-> **Apple Silicon (M‑серия).** Добавьте `platform: linux/arm64` в каждый сервис `docker-compose.yml` или экспортируйте `DOCKER_DEFAULT_PLATFORM=linux/arm64`.
+* Загружать файлы **.txt / .docx / .pdf** (до 20 MB)
+* Считать **слова, символы, абзацы**
+* Находить **дубликаты** по SHA‑256
+* Сравнивать **похожесть документов** (MinHash + коэффициент Жаккара)
+* Генерировать **облака слов**
+* Предоставлять удобный **Swagger‑интерфейс** и REST API
 
 ---
 
 ## Быстрый старт
 
+1. **Установите Docker Engine и Docker Compose V2**
+
+   ```bash
+   # macOS (Homebrew)
+   brew install --cask docker
+   # Ubuntu
+   sudo apt install docker.io docker-compose-plugin
+   ```
+2. **Запустите систему**
+
+   ```bash
+   git clone <ссылка‑на‑репозиторий>
+   cd AntiPlagiarism
+   docker compose up -d --build   # первый запуск c билдом
+   ```
+3. **Откройте браузер**
+   [http://localhost:8080](http://localhost:8080)
+
+---
+
+## Как пользоваться
+
+### Через веб‑интерфейс
+
+1. Перейдите на `http://localhost:8080`
+2. Перетащите файл в область загрузки
+3. Изучите статистику и отчёты
+4. Сравните документ с уже загруженными
+
+### Через API
+
 ```bash
-# 1. Клонируем репозиторий
-$ git clone https://github.com/<user>/AntiPlagiarism.git
-$ cd AntiPlagiarism
+# Загрузить файл
+curl -X POST -F "file=@test.txt" http://localhost:8080/api/files
 
-# 2. Поднимаем стек (при необходимости строим образы)
-$ docker compose up -d --build
+# Получить список файлов
+curl http://localhost:8080/api/files
 
-# 3. Проверяем
-$ open http://localhost:8080/swagger/index.html   # macOS
-$ curl -i http://localhost:8080/health            # 200 OK ✓
+# Статистика файла (замените {id})
+curl http://localhost:8080/api/files/{id}/stats
+
+# Сравнить два файла
+curl -X POST -H "Content-Type: application/json" \
+  -d '{"file_id":"id1","other_file_id":"id2"}' \
+  http://localhost:8080/api/analysis/compare
+
+# Облако слов
+curl http://localhost:8080/api/analysis/wordcloud/{id}
+
+# Health‑check
+curl http://localhost:8080/health
 ```
 
-Остановить и удалить тома:
+---
 
-```bash
-docker compose down -v
-```
+## ⚠️ Важно: схема портов
+
+| URL                                                                                   | Назначение                     | Доступ            |
+| ------------------------------------------------------------------------------------- | ------------------------------ | ----------------- |
+| **`http://localhost:8080`**                                                           | API Gateway + Swagger + веб‑UI | для пользователей |
+| `http://localhost:8081`                                                               | File Storing Service           | внутренний        |
+| `http://localhost:8082`                                                               | File Analysis Service          | внутренний        |
+| Работайте только через порт **8080** — внутренние сервисы не проходят аутентификацию. |                                |                   |
 
 ---
 
@@ -88,78 +87,186 @@ docker compose down -v
 
 ```
 AntiPlagiarism/
-├── AntiPlagiarism.ApiGateway/         # Минимальный Web API
-├── AntiPlagiarism.FileStoringService/ # Хранение файлов + метаданных
-├── AntiPlagiarism.FileAnalysisService/# Движок поиска плагиата
-├── AntiPlagiarism.Common/             # Общие модели и gRPC‑контракты
-├── init-db/                           # SQL для инициализации
-├── docker-compose.yml                 # Локальный стек
+├── api_gateway/               # Веб‑UI + прокси (порт 8080)
+├── file_storing_service/      # Хранение файлов (порт 8081)
+├── file_analysis_service/     # Анализ текста (порт 8082)
+├── docker-compose.yml         # Скрипт запуска сервисов
 └── README.md
 ```
 
 ---
 
-## Конфигурация
+## Что внутри
 
-Все параметры передаются **переменными среды** (см. `docker-compose.yml`).
+### API Gateway (8080)
 
-| Переменная                      | Сервис       | Значение по умолчанию                    | Описание                     |
-| ------------------------------- | ------------ | ---------------------------------------- | ---------------------------- |
-| `POSTGRES_USER`                 | postgres     | `postgres`                               | Суперпользователь БД         |
-| `POSTGRES_PASSWORD`             | postgres     | `postgres`                               | Пароль БД                    |
-| `ConnectionStrings__StorageDb`  | FileStoring  | `Host=postgres;Database=file_storage;…`  | Схема хранения               |
-| `ConnectionStrings__AnalysisDb` | FileAnalysis | `Host=postgres;Database=file_analysis;…` | Схема анализа                |
-| `Gateway__PublicOrigin`         | ApiGateway   | `http://localhost:8080`                  | Базовый URL для Swagger/CORS |
+* Принимает файлы от пользователей
+* Проксирует запросы к другим сервисам
+* Swagger‑документация (`/swagger`)
 
-Для локальной отладки вне Docker используйте `appsettings.Development.json` или **User Secrets**.
+### File Storing Service (8081)
 
----
+* Сохраняет файлы в PostgreSQL Large Objects
+* Определяет дубликаты по SHA‑256
+* Хранит метаданные
 
-## API
+### File Analysis Service (8082)
 
-* **Swagger UI:** [`/swagger`](http://localhost:8080/swagger)
-* **Health‑check:** `GET /health` → `200 OK` / `503 Service Unavailable`
-* **Загрузка файла:** `POST /storage/files` — `multipart/form-data` (`file`) ⇒ `201 Created` + `fileId`
-* **Запуск анализа:** `POST /analysis/jobs` — JSON `{ sourceFileId, referenceIds[] }` ⇒ `jobId`
-* **Статус задачи:** `GET /analysis/jobs/{id}` — `200 OK` + отчёт или `202 Accepted`
-
-Полные модели запросов/ответов смотрите в Swagger или в сгенерированных C# клиентах (`/src/Clients`).
+* Токенизация ➜ шинглы ➜ MinHash
+* Сравнение пар документов (Жаккар)
+* Генерация облака слов (WordCloud)
 
 ---
 
-## Процесс разработки
+## Технологии
 
-1. **IDE** — JetBrains Rider / VS Code с C#‑расширением.
-2. Горячая перезагрузка:
+* **.NET 9** — основной фреймворк
+* **ASP.NET Core + gRPC** — веб‑серверы
+* **PostgreSQL 16** — база данных
+* **Docker / Docker Compose** — контейнеризация
+* **xUnit + TestContainers** — тестирование
 
-   ```bash
-   cd AntiPlagiarism.ApiGateway
-   dotnet watch run
-   ```
-3. **Отладка в контейнере** — `docker compose -f docker-compose.debug.yml up` (порт 5678 для Rider).
-4. **Миграции БД** — EF Core Code‑First:
+---
 
-   ```bash
-   dotnet ef migrations add Init --project AntiPlagiarism.FileStoringService
-   dotnet ef database update
-   ```
+## API‑методы
+
+### API Gateway (`http://localhost:8080`)
+
+| Метод  | URL                          | Описание               |
+| ------ | ---------------------------- | ---------------------- |
+| GET    | /                            | Веб‑интерфейс          |
+| GET    | /health                      | Проверка всех сервисов |
+| POST   | /api/files                   | Загрузить файл         |
+| GET    | /api/files                   | Список файлов          |
+| GET    | /api/files/{id}              | Информация о файле     |
+| DELETE | /api/files/{id}              | Удалить файл           |
+| GET    | /api/files/{id}/content      | Скачать файл           |
+| GET    | /api/files/{id}/stats        | Статистика текста      |
+| POST   | /api/analysis/compare        | Сравнить два файла     |
+| GET    | /api/analysis/wordcloud/{id} | Облако слов            |
+| GET    | /swagger                     | Swagger UI             |
+
+### File Storing Service (`http://localhost:8081`)
+
+| Метод  | URL                     | Описание           |
+| ------ | ----------------------- | ------------------ |
+| GET    | /health                 | Проверка сервиса   |
+| POST   | /api/files              | Загрузить файл     |
+| GET    | /api/files              | Список файлов      |
+| GET    | /api/files/{id}         | Метаданные         |
+| DELETE | /api/files/{id}         | Удалить            |
+| GET    | /api/files/{id}/content | Скачать содержимое |
+
+### File Analysis Service (`http://localhost:8082`)
+
+| Метод | URL                          | Описание           |
+| ----- | ---------------------------- | ------------------ |
+| GET   | /health                      | Проверка сервиса   |
+| GET   | /api/analysis/{id}/stats     | Статистика текста  |
+| POST  | /api/analysis/compare        | Сравнить два файла |
+| GET   | /api/analysis/{id}/wordcloud | Облако слов        |
+
+---
+
+## Системные требования
+
+* Docker (или .NET SDK 9 для локального запуска)
+* 1 ГБ RAM
+* 300 MB места на диске
+* Windows / macOS / Linux
+
+---
+
+## Запуск для разработки (без Docker)
+
+```bash
+# Терминал 1
+cd file_storing_service && dotnet run
+# Терминал 2
+cd file_analysis_service && dotnet run
+# Терминал 3
+cd api_gateway && dotnet run
+```
 
 ---
 
 ## Тестирование
 
-* **Юнит‑тесты** — `dotnet test AntiPlagiarism.sln` (xUnit + FluentAssertions)
-* **Интеграционные** — поднимают TestContainers (PostgreSQL) и вызывают gRPC/HTTP пайплайны.
-* **Статический анализ** — Roslyn Analyzers, сборка падает при уровне ≥ `Warning`.
+```bash
+# Запустить все тесты
+dotnet test
 
+# Тесты только для Gateway
+dotnet test api_gateway.tests/
+```
 
 ---
 
-## FAQ и устранение неполадок
+## Возможные проблемы
 
-| Симптом                        | Диагностика                 | Решение                                                          |
-| ------------------------------ | --------------------------- | ---------------------------------------------------------------- |
-| `port 8080 already in use`     | Порт занят другим процессом | Измените левую часть `ports:` и перезапустите стек.              |
-| `pg_isready: no response`      | БД ещё поднимается          | Подождите 10 с или смотрите логи `docker compose logs postgres`. |
-| Ошибка сборки на Apple Silicon | образы amd64 по умолчанию   | Добавьте `platform: linux/arm64`.                                |
-| Долгая первая сборка           | .NET 9 \~400 МБ             | После кэширования быстрее; можно pre‑build в CI.                 |
+| Симптом                    | Причина               | Решение                                                |
+| -------------------------- | --------------------- | ------------------------------------------------------ |
+| Порт 8080 занят            | Запущен другой сервис | `lsof -i :8080` → изменить порт в `docker-compose.yml` |
+| `pg_isready: no response`  | БД ещё стартует       | Подождать 10 сек или проверить логи Postgres           |
+| `Cannot connect to daemon` | Docker не запущен     | Стартовать Docker Desktop / сервис docker              |
+
+---
+
+## Примеры использования
+
+### Загрузка файла
+
+```bash
+echo "Привет мир" > test.txt
+curl -X POST -F "file=@test.txt" http://localhost:8080/api/files
+```
+
+Ответ:
+
+```json
+{"fileId":"d8f…","filename":"test.txt","size":12,"duplicate":false}
+```
+
+### Получение статистики
+
+```bash
+curl http://localhost:8080/api/files/d8f…/stats
+```
+
+```json
+{"wordCount":2,"charCount":12,"paragraphCount":1}
+```
+
+### Сравнение двух файлов
+
+```bash
+curl -X POST -H "Content-Type: application/json" \
+  -d '{"file_id":"d8f…","other_file_id":"a1b…"}' \
+  http://localhost:8080/api/analysis/compare
+```
+
+```json
+{"jaccard":0.83}
+```
+
+---
+
+## Алгоритмы внутри
+
+* **Статистика**: токенизация по пробелам, символы = длина текста, абзацы = двойной перевод строки.
+* **MinHash**: 128 хэш‑функций → сигнатуры → коэффициент Жаккара.
+* **Дубликаты**: сравнение SHA‑256.
+
+---
+
+## Swagger‑документация
+
+* API Gateway — [http://localhost:8080/swagger](http://localhost:8080/swagger)
+* File Storing Service — [http://localhost:8081/swagger](http://localhost:8081/swagger) (внутренний)
+* File Analysis Service — [http://localhost:8082/swagger](http://localhost:8082/swagger) (внутренний)
+
+Для тестирования удобно использовать **curl** или **Postman**.
+
+---
+
+Система полностью готова к работе после запуска `docker compose up -d`. Приятного использования!
