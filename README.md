@@ -28,8 +28,7 @@
 2. **Запустите систему**
 
    ```bash
-   git clone <ссылка‑на‑репозиторий>
-   cd AntiPlagiarism
+   git clone https://github.com/07kir09/TextScanner
    docker compose up -d --build   # первый запуск c билдом
    ```
 3. **Откройте браузер**
