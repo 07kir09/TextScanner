@@ -1,0 +1,262 @@
+{
+  "format": 1,
+  "restore": {
+    "/Users/kirillvoyakin/Desktop/AntiPlagiarism/AntiPlagiarism.FileStoringService.Tests/AntiPlagiarism.FileStoringService.Tests.csproj": {}
+  },
+  "projects": {
+    "/Users/kirillvoyakin/Desktop/AntiPlagiarism/AntiPlagiarism.Common/AntiPlagiarism.Common.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/kirillvoyakin/Desktop/AntiPlagiarism/AntiPlagiarism.Common/AntiPlagiarism.Common.csproj",
+        "projectName": "AntiPlagiarism.Common",
+        "projectPath": "/Users/kirillvoyakin/Desktop/AntiPlagiarism/AntiPlagiarism.Common/AntiPlagiarism.Common.csproj",
+        "packagesPath": "/Users/kirillvoyakin/.nuget/packages/",
+        "outputPath": "/Users/kirillvoyakin/Desktop/AntiPlagiarism/AntiPlagiarism.Common/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/kirillvoyakin/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "/usr/local/share/dotnet/library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.200"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.203/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/kirillvoyakin/Desktop/AntiPlagiarism/AntiPlagiarism.FileStoringService.Tests/AntiPlagiarism.FileStoringService.Tests.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/kirillvoyakin/Desktop/AntiPlagiarism/AntiPlagiarism.FileStoringService.Tests/AntiPlagiarism.FileStoringService.Tests.csproj",
+        "projectName": "AntiPlagiarism.FileStoringService.Tests",
+        "projectPath": "/Users/kirillvoyakin/Desktop/AntiPlagiarism/AntiPlagiarism.FileStoringService.Tests/AntiPlagiarism.FileStoringService.Tests.csproj",
+        "packagesPath": "/Users/kirillvoyakin/.nuget/packages/",
+        "outputPath": "/Users/kirillvoyakin/Desktop/AntiPlagiarism/AntiPlagiarism.FileStoringService.Tests/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/kirillvoyakin/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "/usr/local/share/dotnet/library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "/Users/kirillvoyakin/Desktop/AntiPlagiarism/AntiPlagiarism.Common/AntiPlagiarism.Common.csproj": {
+                "projectPath": "/Users/kirillvoyakin/Desktop/AntiPlagiarism/AntiPlagiarism.Common/AntiPlagiarism.Common.csproj"
+              },
+              "/Users/kirillvoyakin/Desktop/AntiPlagiarism/AntiPlagiarism.FileStoringService/AntiPlagiarism.FileStoringService.csproj": {
+                "projectPath": "/Users/kirillvoyakin/Desktop/AntiPlagiarism/AntiPlagiarism.FileStoringService/AntiPlagiarism.FileStoringService.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.200"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore.InMemory": {
+              "target": "Package",
+              "version": "[9.0.5, )"
+            },
+            "Microsoft.NET.Test.Sdk": {
+              "target": "Package",
+              "version": "[17.11.1, )"
+            },
+            "Moq": {
+              "target": "Package",
+              "version": "[4.20.72, )"
+            },
+            "coverlet.collector": {
+              "target": "Package",
+              "version": "[6.0.2, )"
+            },
+            "xunit": {
+              "target": "Package",
+              "version": "[2.9.2, )"
+            },
+            "xunit.runner.visualstudio": {
+              "target": "Package",
+              "version": "[2.8.2, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.203/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/kirillvoyakin/Desktop/AntiPlagiarism/AntiPlagiarism.FileStoringService/AntiPlagiarism.FileStoringService.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/kirillvoyakin/Desktop/AntiPlagiarism/AntiPlagiarism.FileStoringService/AntiPlagiarism.FileStoringService.csproj",
+        "projectName": "AntiPlagiarism.FileStoringService",
+        "projectPath": "/Users/kirillvoyakin/Desktop/AntiPlagiarism/AntiPlagiarism.FileStoringService/AntiPlagiarism.FileStoringService.csproj",
+        "packagesPath": "/Users/kirillvoyakin/.nuget/packages/",
+        "outputPath": "/Users/kirillvoyakin/Desktop/AntiPlagiarism/AntiPlagiarism.FileStoringService/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/kirillvoyakin/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "/usr/local/share/dotnet/library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "/Users/kirillvoyakin/Desktop/AntiPlagiarism/AntiPlagiarism.Common/AntiPlagiarism.Common.csproj": {
+                "projectPath": "/Users/kirillvoyakin/Desktop/AntiPlagiarism/AntiPlagiarism.Common/AntiPlagiarism.Common.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.200"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "Microsoft.AspNetCore.Http.Features": {
+              "target": "Package",
+              "version": "[6.0.0-preview.4.21253.5, )"
+            },
+            "Microsoft.AspNetCore.OpenApi": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.0.5, )"
+            },
+            "Microsoft.EntityFrameworkCore.Relational": {
+              "target": "Package",
+              "version": "[9.0.5, )"
+            },
+            "Npgsql.EntityFrameworkCore.PostgreSQL": {
+              "target": "Package",
+              "version": "[9.0.4, )"
+            },
+            "Swashbuckle.AspNetCore.Swagger": {
+              "target": "Package",
+              "version": "[8.1.1, )"
+            },
+            "Swashbuckle.AspNetCore.SwaggerGen": {
+              "target": "Package",
+              "version": "[8.1.1, )"
+            },
+            "Swashbuckle.AspNetCore.SwaggerUI": {
+              "target": "Package",
+              "version": "[8.1.1, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.203/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

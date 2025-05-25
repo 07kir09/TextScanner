@@ -1,0 +1,31 @@
+{
+  "version": 2,
+  "dgSpecHash": "IWODPeauWd8=",
+  "success": true,
+  "projectFilePath": "/Users/kirillvoyakin/Desktop/AntiPlagiarism/AntiPlagiarism.FileStoringService/AntiPlagiarism.FileStoringService.csproj",
+  "expectedPackageFiles": [
+    "/Users/kirillvoyakin/.nuget/packages/microsoft.aspnetcore.http.features/6.0.0-preview.4.21253.5/microsoft.aspnetcore.http.features.6.0.0-preview.4.21253.5.nupkg.sha512",
+    "/Users/kirillvoyakin/.nuget/packages/microsoft.aspnetcore.openapi/9.0.0/microsoft.aspnetcore.openapi.9.0.0.nupkg.sha512",
+    "/Users/kirillvoyakin/.nuget/packages/microsoft.entityframeworkcore/9.0.5/microsoft.entityframeworkcore.9.0.5.nupkg.sha512",
+    "/Users/kirillvoyakin/.nuget/packages/microsoft.entityframeworkcore.abstractions/9.0.5/microsoft.entityframeworkcore.abstractions.9.0.5.nupkg.sha512",
+    "/Users/kirillvoyakin/.nuget/packages/microsoft.entityframeworkcore.analyzers/9.0.5/microsoft.entityframeworkcore.analyzers.9.0.5.nupkg.sha512",
+    "/Users/kirillvoyakin/.nuget/packages/microsoft.entityframeworkcore.relational/9.0.5/microsoft.entityframeworkcore.relational.9.0.5.nupkg.sha512",
+    "/Users/kirillvoyakin/.nuget/packages/microsoft.extensions.caching.abstractions/9.0.5/microsoft.extensions.caching.abstractions.9.0.5.nupkg.sha512",
+    "/Users/kirillvoyakin/.nuget/packages/microsoft.extensions.caching.memory/9.0.5/microsoft.extensions.caching.memory.9.0.5.nupkg.sha512",
+    "/Users/kirillvoyakin/.nuget/packages/microsoft.extensions.configuration.abstractions/9.0.5/microsoft.extensions.configuration.abstractions.9.0.5.nupkg.sha512",
+    "/Users/kirillvoyakin/.nuget/packages/microsoft.extensions.dependencyinjection/9.0.5/microsoft.extensions.dependencyinjection.9.0.5.nupkg.sha512",
+    "/Users/kirillvoyakin/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/9.0.5/microsoft.extensions.dependencyinjection.abstractions.9.0.5.nupkg.sha512",
+    "/Users/kirillvoyakin/.nuget/packages/microsoft.extensions.logging/9.0.5/microsoft.extensions.logging.9.0.5.nupkg.sha512",
+    "/Users/kirillvoyakin/.nuget/packages/microsoft.extensions.logging.abstractions/9.0.5/microsoft.extensions.logging.abstractions.9.0.5.nupkg.sha512",
+    "/Users/kirillvoyakin/.nuget/packages/microsoft.extensions.options/9.0.5/microsoft.extensions.options.9.0.5.nupkg.sha512",
+    "/Users/kirillvoyakin/.nuget/packages/microsoft.extensions.primitives/9.0.5/microsoft.extensions.primitives.9.0.5.nupkg.sha512",
+    "/Users/kirillvoyakin/.nuget/packages/microsoft.openapi/1.6.23/microsoft.openapi.1.6.23.nupkg.sha512",
+    "/Users/kirillvoyakin/.nuget/packages/npgsql/9.0.3/npgsql.9.0.3.nupkg.sha512",
+    "/Users/kirillvoyakin/.nuget/packages/npgsql.entityframeworkcore.postgresql/9.0.4/npgsql.entityframeworkcore.postgresql.9.0.4.nupkg.sha512",
+    "/Users/kirillvoyakin/.nuget/packages/swashbuckle.aspnetcore.swagger/8.1.1/swashbuckle.aspnetcore.swagger.8.1.1.nupkg.sha512",
+    "/Users/kirillvoyakin/.nuget/packages/swashbuckle.aspnetcore.swaggergen/8.1.1/swashbuckle.aspnetcore.swaggergen.8.1.1.nupkg.sha512",
+    "/Users/kirillvoyakin/.nuget/packages/swashbuckle.aspnetcore.swaggerui/8.1.1/swashbuckle.aspnetcore.swaggerui.8.1.1.nupkg.sha512",
+    "/Users/kirillvoyakin/.nuget/packages/system.io.pipelines/6.0.0-preview.4.21253.7/system.io.pipelines.6.0.0-preview.4.21253.7.nupkg.sha512"
+  ],
+  "logs": []
+}

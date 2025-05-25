@@ -1,0 +1,6 @@
+@AntiPlagiarism.ApiGateway_HostAddress = http://localhost:5281
+
+GET {{AntiPlagiarism.ApiGateway_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

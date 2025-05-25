@@ -1,0 +1,91 @@
+version: '3.8'
+
+services:
+  api-gateway:
+    container_name: antiplagiarism-api-gateway
+    build:
+      context: .
+      dockerfile: AntiPlagiarism.ApiGateway/Dockerfile
+    ports:
+      - "8080:80"
+    depends_on:
+      file-storing-service:
+        condition: service_started
+      file-analysis-service:
+        condition: service_started
+    environment:
+      - ASPNETCORE_URLS=http://+:80
+      - ASPNETCORE_ENVIRONMENT=Development
+      - Services__FileStoringService__Url=http://file-storing-service
+      - Services__FileAnalysisService__Url=http://file-analysis-service
+    networks:
+      - antiplagiarism-network
+
+  file-storing-service:
+    container_name: antiplagiarism-file-storing-service
+    build:
+      context: .
+      dockerfile: AntiPlagiarism.FileStoringService/Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - ASPNETCORE_URLS=http://+:80  # Добавьте эту строку
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=postgres;Database=file_storage;Username=postgres;Password=postgres
+      - LocalFileStorage__StorageDirectory=/app/FileStorage
+    volumes:
+      - file-storage-data:/app/FileStorage
+    networks:
+      - antiplagiarism-network
+
+  file-analysis-service:
+    container_name: antiplagiarism-file-analysis-service
+    build:
+      context: .
+      dockerfile: AntiPlagiarism.FileAnalysisService/Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+      file-storing-service:
+        condition: service_started
+    environment:
+      - ASPNETCORE_URLS=http://+:80  # Добавьте эту строку
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=postgres;Database=file_analysis;Username=postgres;Password=postgres
+      - WordCloudStorage__StorageDirectory=/app/WordCloudStorage
+      - Services__FileStoringService__Url=http://file-storing-service
+    volumes:
+      - wordcloud-storage-data:/app/WordCloudStorage
+    networks:
+      - antiplagiarism-network
+
+  postgres:
+    container_name: antiplagiarism-postgres
+    image: postgres:16
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_MULTIPLE_DATABASES=file_storage,file_analysis
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./init-db:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - antiplagiarism-network
+
+volumes:
+  postgres-data:
+  file-storage-data:
+  wordcloud-storage-data:
+
+networks:
+  antiplagiarism-network:
+    driver: bridge

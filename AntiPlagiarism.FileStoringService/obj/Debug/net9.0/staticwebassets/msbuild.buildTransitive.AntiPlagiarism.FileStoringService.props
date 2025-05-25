@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\AntiPlagiarism.FileStoringService.props" />
+</Project>

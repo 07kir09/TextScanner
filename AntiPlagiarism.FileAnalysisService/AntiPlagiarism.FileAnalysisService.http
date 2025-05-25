@@ -1,0 +1,6 @@
+@AntiPlagiarism.FileAnalysisService_HostAddress = http://localhost:5266
+
+GET {{AntiPlagiarism.FileAnalysisService_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

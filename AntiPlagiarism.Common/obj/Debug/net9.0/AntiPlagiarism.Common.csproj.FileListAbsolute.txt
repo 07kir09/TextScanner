@@ -1,0 +1,11 @@
+C:\SoftwareConstruction\AntiPlagiarism\AntiPlagiarism.Common\bin\Debug\net9.0\AntiPlagiarism.Common.deps.json
+C:\SoftwareConstruction\AntiPlagiarism\AntiPlagiarism.Common\bin\Debug\net9.0\AntiPlagiarism.Common.dll
+C:\SoftwareConstruction\AntiPlagiarism\AntiPlagiarism.Common\bin\Debug\net9.0\AntiPlagiarism.Common.pdb
+C:\SoftwareConstruction\AntiPlagiarism\AntiPlagiarism.Common\obj\Debug\net9.0\AntiPlagiarism.Common.GeneratedMSBuildEditorConfig.editorconfig
+C:\SoftwareConstruction\AntiPlagiarism\AntiPlagiarism.Common\obj\Debug\net9.0\AntiPlagiarism.Common.AssemblyInfoInputs.cache
+C:\SoftwareConstruction\AntiPlagiarism\AntiPlagiarism.Common\obj\Debug\net9.0\AntiPlagiarism.Common.AssemblyInfo.cs
+C:\SoftwareConstruction\AntiPlagiarism\AntiPlagiarism.Common\obj\Debug\net9.0\AntiPlagiarism.Common.csproj.CoreCompileInputs.cache
+C:\SoftwareConstruction\AntiPlagiarism\AntiPlagiarism.Common\obj\Debug\net9.0\AntiPlagiarism.Common.dll
+C:\SoftwareConstruction\AntiPlagiarism\AntiPlagiarism.Common\obj\Debug\net9.0\refint\AntiPlagiarism.Common.dll
+C:\SoftwareConstruction\AntiPlagiarism\AntiPlagiarism.Common\obj\Debug\net9.0\AntiPlagiarism.Common.pdb
+C:\SoftwareConstruction\AntiPlagiarism\AntiPlagiarism.Common\obj\Debug\net9.0\ref\AntiPlagiarism.Common.dll
